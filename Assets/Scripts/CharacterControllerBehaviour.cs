@@ -56,14 +56,25 @@ public class CharacterControllerBehaviour : MonoBehaviour
     void Update()
     {
         _movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-
-        CheckSprint();
     }
 
-    private void CheckSprint()
+    void FixedUpdate()
     {
-        if (Input.GetButtonDown("Fire3") && 
-            ((Input.GetAxis("Horizontal") > 0.9f || (Input.GetAxis("Vertical") > 0.9f)) || 
+        ApplySprint();
+        ApplyGround();
+        ApplyGravity();
+        ApplyMovement();
+        ApplyGroundDrag();
+
+        LimitMaximumRunningSpeed();
+
+        _characterController.Move(_velocity * Time.deltaTime);
+    }
+
+    private void ApplySprint()
+    {
+        if (Input.GetButtonDown("Fire3") &&
+            ((Input.GetAxis("Horizontal") > 0.9f || (Input.GetAxis("Vertical") > 0.9f)) ||
             ((Input.GetAxis("Horizontal") < -0.9f || (Input.GetAxis("Vertical") < -0.9f)))))
         {
             _maxRunningSpeed += _sprintingMultiplier;
@@ -75,19 +86,6 @@ public class CharacterControllerBehaviour : MonoBehaviour
             _maxRunningSpeed = _beginMaxRunningSpeed;
             _isSprinting = false;
         }
-    }
-
-    void FixedUpdate()
-    {
-      
-        ApplyGround();
-        ApplyGravity();
-        ApplyMovement();
-        ApplyGroundDrag();
-
-        LimitMaximumRunningSpeed();
-
-        _characterController.Move(_velocity * Time.deltaTime);
     }
 
     private void ApplyGround()
