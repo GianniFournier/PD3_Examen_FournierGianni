@@ -39,18 +39,34 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
     public bool _isSprinting;
 
+    public bool _isPickingUpAxe;
+
+    public bool _stopMovement;
+
+    public bool _isHoldingAxe;
+
+    public bool _isHoldingLog;
+
+    public bool _swingAxe;
+
+    public bool _hitTree;
+
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
 
         _isSprinting = false;
 
+        _stopMovement = false;
+
+        _isHoldingAxe = false;
+
+        _isHoldingLog = false;
+
+        _hitTree = false;
+
         _beginMaxRunningSpeed = _maxRunningSpeed;
 
-#if DEBUG
-        Assert.IsNotNull(_characterController, "Dependency Error: This component needs a CharachterController to work.");
-        Assert.IsNotNull(_absoluteForward, "Dependency Error: Set the Absolute Forward field.");
-#endif
     }
 
     void Update()
@@ -60,15 +76,46 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        ApplySprint();
         ApplyGround();
         ApplyGravity();
-        ApplyMovement();
-        ApplyGroundDrag();
+
+
+        if (_stopMovement == false)
+        {
+            if(_isHoldingLog == false && _isHoldingAxe == false)
+            {
+                ApplySprint();
+            }
+
+            ApplyMovement();
+            ApplyGroundDrag();
+            DropItem();
+            SwingAxe();
+            _characterController.Move(_velocity * Time.deltaTime);
+        }
 
         LimitMaximumRunningSpeed();
 
-        _characterController.Move(_velocity * Time.deltaTime);
+    }
+
+    private void DropItem()
+    {
+        if(Input.GetButtonDown("Fire2") && (_isHoldingAxe == true || _isHoldingLog == true) && _movement == Vector3.zero)
+        {
+            Debug.Log("[CHAR] Dropped");
+            _isHoldingAxe = false;
+            _isHoldingLog = false;
+        }
+    }
+
+    private void SwingAxe()
+    {
+        if (Input.GetButtonDown("XboxRB") && _isHoldingAxe == true && _swingAxe == false)
+        {
+            Debug.Log("[CHAR] Swing Axe");
+            _swingAxe = true;
+            
+        }
     }
 
     private void ApplySprint()
@@ -135,4 +182,23 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
         _velocity = yVelocity + clampedXzVelocity;
     }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Axe" && 
+            Input.GetButtonDown("Fire1") && 
+            _movement == Vector3.zero && 
+            _isHoldingAxe == false && 
+            _isHoldingLog == false)
+        {
+            Debug.Log("[CHAR] Picking Up");
+            _isPickingUpAxe = true;
+        }
+
+
+    }
+
+
+
+
 }
