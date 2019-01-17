@@ -105,6 +105,10 @@ public class PlayerAnimationScript : MonoBehaviour {
         {
             _anim.SetBool("IsHoldingAxe", true);
         }
+        else
+        {
+            _anim.SetBool("IsHoldingAxe", false);
+        }
     }
 
     //-------------EVENTS----------------\\
@@ -135,5 +139,27 @@ public class PlayerAnimationScript : MonoBehaviour {
     public void HitTreeStop()
     {
         _charCTRLScript._hitTree = false;
+    }
+
+    public void PickedUp()
+    {
+        if (_charCTRLScript._isHoldingAxe == true)
+        {
+            _charCTRLScript._axe.GetComponent<Rigidbody>().isKinematic = true;
+            _charCTRLScript._axe.GetComponent<BoxCollider>().enabled = false;
+            _charCTRLScript._axe.transform.SetParent(_charCTRLScript._axeActive.transform);
+            _charCTRLScript._axe.transform.position = _charCTRLScript._axeActive.transform.position;
+            _charCTRLScript._axe.transform.rotation = _charCTRLScript._axeActive.transform.rotation;
+
+        }
+    }
+
+    public void LogActive()
+    {
+        if (_charCTRLScript._isHoldingLog == true)
+        {
+            _charCTRLScript._pickUpLogSpecific = true;
+
+        }
     }
 }

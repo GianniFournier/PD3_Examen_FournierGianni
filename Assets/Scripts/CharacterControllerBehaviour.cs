@@ -25,6 +25,8 @@ public class CharacterControllerBehaviour : MonoBehaviour
     [SerializeField]
     private float _sprintingMultiplier;
 
+    [SerializeField]
+    private Vector3 _tempForward = Vector3.zero;
     [Header("Dependencies")]
     [SerializeField, Tooltip("What should determine the absolute forward when a player presses forward.")]
     private Transform _absoluteForward;
@@ -36,6 +38,11 @@ public class CharacterControllerBehaviour : MonoBehaviour
     private Vector3 _velocity = Vector3.zero;
 
     private Vector3 _movement;
+
+    [SerializeField]
+    private Transform _modelTransform;
+
+    private BoxCollider _col;
 
     [Header("Booleans")]
     public bool _isSprinting;
@@ -54,8 +61,33 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
     public bool _isPickingUpLog;
 
+    public bool _pickUpLogSpecific;
+
+    public bool _dropLog;
+
+    [Header("GameObjects")]
+
     [SerializeField]
-    private TreeScript _treeScript;
+    public GameObject _handAxe;
+
+    [SerializeField]
+    public GameObject _handLog;
+
+    [SerializeField]
+    public GameObject _axe;
+
+    [SerializeField]
+    public GameObject _axeActive;
+
+    [SerializeField]
+    public GameObject _log;
+
+    [SerializeField]
+    public GameObject _logActive;
+
+    public bool _treeHit;
+
+    public bool _isHoldingLogNow;
 
     void Start()
     {
@@ -71,17 +103,41 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
         _hitTree = false;
 
+        _isHoldingLogNow = false;
+
+        _pickUpLogSpecific = false;
+
+        _dropLog = false;
+
         _beginMaxRunningSpeed = _maxRunningSpeed;
+
+        _col = GetComponent<BoxCollider>();
 
     }
 
     void Update()
     {
-        _movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        MovementUpdate();
 
-        if(_isHoldingLog == true)
+    }
+
+    private void MovementUpdate()
+    {
+        _movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
+        Vector3 rawMovement = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+
+        if (_isHoldingLog == true)
         {
             _movement /= 7.0f;
+        }
+
+        if (rawMovement.magnitude > 0)
+        {
+            _modelTransform.eulerAngles = Vector3.Scale(Vector3.up, Quaternion.LookRotation(_velocity).eulerAngles);
+            Vector3 newCenter = _col.center;
+            newCenter.x = -(rawMovement.normalized * 0.8f).z;
+            newCenter.z = (rawMovement.normalized * 0.8f).x;
+            _col.center = newCenter;
         }
     }
 
@@ -113,10 +169,43 @@ public class CharacterControllerBehaviour : MonoBehaviour
     {
         if(Input.GetButtonDown("Fire2") && (_isHoldingAxe == true || _isHoldingLog == true) && _movement == Vector3.zero)
         {
-            Debug.Log("[CHAR] Dropped");
-            _isHoldingAxe = false;
-            _isHoldingLog = false;
+            if(_isHoldingAxe == true)
+            {
+                Debug.Log("[CHAR] Axe Dropped");
+                _axe.transform.SetParent(null);
+                _axe.GetComponent<Rigidbody>().isKinematic = false;
+                _axe.GetComponent<BoxCollider>().enabled = true;
+
+                _isHoldingAxe = false;
+            }
+
+            if (_isHoldingLog == true && _movement == Vector3.zero)
+            {
+                Debug.Log("[CHAR] Log Dropped");
+
+                _logActive.transform.GetChild(0).GetComponent<Rigidbody>().isKinematic = false;
+                _logActive.transform.GetChild(0).GetComponent<BoxCollider>().enabled = true;
+                _logActive.transform.GetChild(0).GetComponent<CapsuleCollider>().enabled = true;
+                _logActive.transform.GetChild(0).transform.SetParent(null);
+
+                if (_logActive.transform.childCount == 1)
+                {
+                        Destroy(_logActive.transform.GetChild(0).gameObject);
+                }
+
+                if (_logActive.transform.childCount == 2)
+                {
+                    Destroy(_logActive.transform.GetChild(0).gameObject);
+                    Destroy(_logActive.transform.GetChild(0).gameObject);
+                }
+
+
+                _dropLog = true;
+                _isHoldingLog = false;
+            }
+
         }
+
     }
 
     private void SwingAxe()
@@ -208,22 +297,22 @@ public class CharacterControllerBehaviour : MonoBehaviour
             Input.GetButtonDown("Fire1") &&
             _movement == Vector3.zero &&
             _isHoldingAxe == false &&
-            _isHoldingLog == false)
+            _isHoldingLog == false
+            )
         {
             Debug.Log("[CHAR] Picking Up Log");
             _isPickingUpLog = true;
+
+            other.GetComponent<Rigidbody>().isKinematic = true;
+            other.GetComponent<BoxCollider>().enabled = false;
+            other.GetComponent<CapsuleCollider>().enabled = false;
+            other.transform.SetParent(_logActive.transform);
+            other.transform.position = _logActive.transform.position;
+            other.transform.rotation = _logActive.transform.rotation;
         }
 
-        if (other.tag == "Tree" && _swingAxe == true && _hitTree == true)
-        {
-            Debug.Log("[CHAR] Tree Chopped");
-            _treeScript._isTreeDestroyed = true;
-        }
-
+        
 
     }
-
-
-
 
 }

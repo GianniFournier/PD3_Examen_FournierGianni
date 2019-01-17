@@ -7,6 +7,8 @@ TagManager:
   - Axe
   - Log
   - Tree
+  - HandAxe
+  - Character
   layers:
   - Default
   - TransparentFX
