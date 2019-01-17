@@ -6,21 +6,20 @@ using UnityEngine;
 public class TreeScript : MonoBehaviour {
 
     [SerializeField]
-    bool _isTreeDestroyed = false;
-
-    [SerializeField]
     GameObject _tree;
 
     [SerializeField]
     GameObject _choppedTree;
 
+    public bool _isTreeDestroyed;
 
 	void Start ()
     {
-        _tree.active = true;
-        _choppedTree.active = false;
+        _isTreeDestroyed = false;
+        _tree.SetActive(true);
+        _choppedTree.SetActive(false);
 
-	}
+    }
 	
 	void Update ()
     {
@@ -33,7 +32,7 @@ public class TreeScript : MonoBehaviour {
 
     private void DestroyTree()
     {
-        _tree.active = false;
-        _choppedTree.active = true;
+        _tree.SetActive(false);
+        _choppedTree.SetActive(true);
     }
 }

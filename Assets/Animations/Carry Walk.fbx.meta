@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9a96689c260f36149834bf8a18ba8c2e
+guid: 665ab925c36ca264bb1d4e9f3e21657d
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -139,7 +139,7 @@ ModelImporter:
     400130: mixamorig:Spine1
     400132: mixamorig:Spine2
     400134: //RootNode
-    7400000: Carrying
+    7400000: Carry Walk
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -170,10 +170,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Carrying
+      name: Carry Walk
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 300
+      lastFrame: 86
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

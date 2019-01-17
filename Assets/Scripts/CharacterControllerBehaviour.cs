@@ -22,8 +22,6 @@ public class CharacterControllerBehaviour : MonoBehaviour
     [SerializeField]
     private float _maxRunningSpeed = (30.0f * 1000) / (60 * 60); // [m/s], 30 km/h
 
-    private float _beginMaxRunningSpeed;
-
     [SerializeField]
     private float _sprintingMultiplier;
 
@@ -31,12 +29,15 @@ public class CharacterControllerBehaviour : MonoBehaviour
     [SerializeField, Tooltip("What should determine the absolute forward when a player presses forward.")]
     private Transform _absoluteForward;
 
+    private float _beginMaxRunningSpeed;
+
     private CharacterController _characterController;
 
     private Vector3 _velocity = Vector3.zero;
 
     private Vector3 _movement;
 
+    [Header("Booleans")]
     public bool _isSprinting;
 
     public bool _isPickingUpAxe;
@@ -52,6 +53,9 @@ public class CharacterControllerBehaviour : MonoBehaviour
     public bool _hitTree;
 
     public bool _isPickingUpLog;
+
+    [SerializeField]
+    private TreeScript _treeScript;
 
     void Start()
     {
@@ -74,6 +78,11 @@ public class CharacterControllerBehaviour : MonoBehaviour
     void Update()
     {
         _movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        if(_isHoldingLog == true)
+        {
+            _movement /= 7.0f;
+        }
     }
 
     void FixedUpdate()
@@ -203,6 +212,12 @@ public class CharacterControllerBehaviour : MonoBehaviour
         {
             Debug.Log("[CHAR] Picking Up Log");
             _isPickingUpLog = true;
+        }
+
+        if (other.tag == "Tree" && _swingAxe == true && _hitTree == true)
+        {
+            Debug.Log("[CHAR] Tree Chopped");
+            _treeScript._isTreeDestroyed = true;
         }
 
 

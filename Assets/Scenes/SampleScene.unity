@@ -380,6 +380,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &212710948 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114368779078468632, guid: 3c0952e09f5bb9b43a272232b8c8bc14,
+    type: 2}
+  m_PrefabInternal: {fileID: 1301895253}
+  m_Script: {fileID: 11500000, guid: f52679d29845c4443bc91e5139055097, type: 3}
 --- !u!1 &297564967
 GameObject:
   m_ObjectHideFlags: 0
@@ -2513,7 +2519,7 @@ Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: pb_Mesh4302
+  m_Name: pb_Mesh4260
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -2912,6 +2918,7 @@ MonoBehaviour:
   _swingAxe: 0
   _hitTree: 0
   _isPickingUpLog: 0
+  _treeScript: {fileID: 212710948}
 --- !u!114 &407779666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7130,7 +7137,7 @@ GameObject:
   - component: {fileID: 1914752542}
   - component: {fileID: 1914752541}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Rotsen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
