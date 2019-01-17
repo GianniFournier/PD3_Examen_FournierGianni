@@ -21,6 +21,33 @@ public class PlayerAnimationScript : MonoBehaviour {
         PickUpAxe();
         HoldingAxe();
         SwingAxe();
+        PickUpLog();
+        HoldLog();
+    }
+
+    private void HoldLog()
+    {
+        if(_charCTRLScript._isHoldingLog == true)
+        {
+            Debug.Log("[ANIMATOR] Holding Log");
+            _anim.SetBool("IsHoldingLog", true);
+        }
+        else
+        {
+            _anim.SetBool("IsHoldingLog", false);
+        }
+        
+    }
+
+    private void PickUpLog()
+    {
+        if (_charCTRLScript._isPickingUpLog == true)
+        {
+            _anim.SetTrigger("PickUpTrigger");
+            Debug.Log("[ANIMATOR] Is Picking Up Log");
+            _charCTRLScript._isPickingUpLog = false;
+            _charCTRLScript._isHoldingLog = true;
+        }
     }
 
     private void SwingAxe()
@@ -66,7 +93,7 @@ public class PlayerAnimationScript : MonoBehaviour {
         if (_charCTRLScript._isPickingUpAxe == true)
         {
             _anim.SetTrigger("PickUpTrigger");
-            Debug.Log("[ANIMATOR] Is Picking Up");
+            Debug.Log("[ANIMATOR] Is Picking Up Axe");
             _charCTRLScript._isPickingUpAxe = false;
             _charCTRLScript._isHoldingAxe = true;
         }

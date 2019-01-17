@@ -51,6 +51,8 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
     public bool _hitTree;
 
+    public bool _isPickingUpLog;
+
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
@@ -120,10 +122,6 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
     private void ApplySprint()
     {
-        //if (Input.GetButtonDown("Fire3") &&
-        //    ((Input.GetAxis("Horizontal") > 0.9f || (Input.GetAxis("Vertical") > 0.9f)) ||
-        //    ((Input.GetAxis("Horizontal") < -0.9f || (Input.GetAxis("Vertical") < -0.9f))
-        //    )))
         if (Input.GetButtonDown("Fire3") && _movement != Vector3.zero)
         {
             _maxRunningSpeed += _sprintingMultiplier;
@@ -193,8 +191,18 @@ public class CharacterControllerBehaviour : MonoBehaviour
             _isHoldingAxe == false && 
             _isHoldingLog == false)
         {
-            Debug.Log("[CHAR] Picking Up");
+            Debug.Log("[CHAR] Picking Up Axe");
             _isPickingUpAxe = true;
+        }
+
+        if (other.tag == "Log" &&
+            Input.GetButtonDown("Fire1") &&
+            _movement == Vector3.zero &&
+            _isHoldingAxe == false &&
+            _isHoldingLog == false)
+        {
+            Debug.Log("[CHAR] Picking Up Log");
+            _isPickingUpLog = true;
         }
 
 
