@@ -120,15 +120,17 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
     private void ApplySprint()
     {
-        if (Input.GetButtonDown("Fire3") &&
-            ((Input.GetAxis("Horizontal") > 0.9f || (Input.GetAxis("Vertical") > 0.9f)) ||
-            ((Input.GetAxis("Horizontal") < -0.9f || (Input.GetAxis("Vertical") < -0.9f)))))
+        //if (Input.GetButtonDown("Fire3") &&
+        //    ((Input.GetAxis("Horizontal") > 0.9f || (Input.GetAxis("Vertical") > 0.9f)) ||
+        //    ((Input.GetAxis("Horizontal") < -0.9f || (Input.GetAxis("Vertical") < -0.9f))
+        //    )))
+        if (Input.GetButtonDown("Fire3") && _movement != Vector3.zero)
         {
             _maxRunningSpeed += _sprintingMultiplier;
             _isSprinting = true;
         }
 
-        if (Input.GetButtonUp("Fire3"))
+        if (Input.GetButtonUp("Fire3") || _movement == Vector3.zero)
         {
             _maxRunningSpeed = _beginMaxRunningSpeed;
             _isSprinting = false;
