@@ -65,6 +65,12 @@ public class CharacterControllerBehaviour : MonoBehaviour
 
     public bool _dropLog;
 
+    public bool _treeHit;
+
+    public bool _isHoldingLogNow;
+
+    public bool _isButtonPressed;
+
     [Header("GameObjects")]
 
     [SerializeField]
@@ -85,10 +91,6 @@ public class CharacterControllerBehaviour : MonoBehaviour
     [SerializeField]
     public GameObject _logActive;
 
-    public bool _treeHit;
-
-    public bool _isHoldingLogNow;
-
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
@@ -108,6 +110,8 @@ public class CharacterControllerBehaviour : MonoBehaviour
         _pickUpLogSpecific = false;
 
         _dropLog = false;
+
+        _isButtonPressed = false;
 
         _beginMaxRunningSpeed = _maxRunningSpeed;
 
@@ -284,7 +288,7 @@ public class CharacterControllerBehaviour : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
         if (other.tag == "Axe" && 
-            Input.GetButtonDown("Fire1") && 
+            Input.GetButtonDown("AButton") && 
             _movement == Vector3.zero && 
             _isHoldingAxe == false && 
             _isHoldingLog == false)
@@ -294,7 +298,7 @@ public class CharacterControllerBehaviour : MonoBehaviour
         }
 
         if (other.tag == "Log" &&
-            Input.GetButtonDown("Fire1") &&
+            Input.GetButtonDown("AButton") &&
             _movement == Vector3.zero &&
             _isHoldingAxe == false &&
             _isHoldingLog == false
@@ -311,7 +315,15 @@ public class CharacterControllerBehaviour : MonoBehaviour
             other.transform.rotation = _logActive.transform.rotation;
         }
 
-        
+        if (other.tag == "Button" &&
+           Input.GetButtonDown("XboxRB") &&
+           _movement == Vector3.zero &&
+           _isHoldingAxe == false &&
+           _isHoldingLog == false)
+        {
+            Debug.Log("[CHAR] Button Pressed");
+            _isButtonPressed = true;
+        }
 
     }
 
