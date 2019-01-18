@@ -9,6 +9,8 @@ TagManager:
   - Tree
   - HandAxe
   - Character
+  - Hakselaar
+  - Button
   layers:
   - Default
   - TransparentFX
